@@ -42,13 +42,13 @@ pydantic_core==2.46.4
 Pygments==2.20.0
 pyjokes==0.8.3
 PyMuPDF==1.27.2.3
-pypiwin32==223
+
 python-decouple==3.8
 python-dotenv==1.2.2
 python-jose==3.5.0
 python-multipart==0.0.32
 pyttsx3==2.99
-pywin32==311
+
 PyYAML==6.0.3
 rich==15.0.0
 rich-toolkit==0.20.1
