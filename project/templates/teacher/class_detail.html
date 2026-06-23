@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Class Details - {{ classroom.name }}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% include 'includes/_shared_styles.html' %}
+    <script src="https://kit.fontawesome.com/7a4b62b0a4.js" crossorigin="anonymous"></script>
+</head>
+
+<body>
+
+    {% include 'includes/_teacher_sidebar.html' %}
+
+    <div class="main">
+        <a href="{% url 'class_list' %}" class="back-btn">
+            <i class="fas fa-arrow-left"></i> Back to My Classes
+        </a>
+
+        <div class="page-header">
+            <div>
+                <h1><i class="fas fa-university"></i> Class: {{ classroom.name }}</h1>
+                <p>Semester {{ classroom.semester }} | Your Subjects:
+                    {% for subject in subjects %}
+                    <span
+                        style="background: rgba(37, 99, 235, 0.1); color: #2563eb; padding: 2px 8px; border-radius: 12px; font-size: 12px; font-weight: 600; margin-right: 5px;">
+                        {{ subject.name }}
+                    </span>
+                    {% endfor %}
+                </p>
+            </div>
+            <a href="{% url 'add_student' classroom.id %}" class="btn-primary">
+                <i class="fas fa-user-plus"></i> Add Student
+            </a>
+        </div>
+
+        <div class="card">
+            <div class="section-header"
+                style="padding: 20px 28px; border-bottom: 1px solid #f1f5f9; background: #f8fafc;">
+                <h2 style="font-size: 16px; color: #1e3a8a;"><i class="fas fa-users"></i> Enrolled Students ({{
+                    students.count }})</h2>
+            </div>
+            <div class="card-body" style="padding: 0;">
+                {% if students %}
+                <table>
+                    <thead>
+                        <tr>
+                            <th style="width: 50px;">#</th>
+                            <th>Student Name</th>
+                            <th>Enrollment No.</th>
+                            <th>Email Address</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for s in students %}
+                        <tr>
+                            <td>{{ forloop.counter }}</td>
+                            <td>
+                                <div style="display: flex; align-items: center; gap: 12px;">
+                                    {% if s.p %}
+                                    <img src="{{ s.p }}"
+                                        style="width: 32px; height: 32px; border-radius: 50%; object-fit: cover; border: 2px solid #e2e8f0;">
+                                    {% else %}
+                                    <div
+                                        style="width: 32px; height: 32px; border-radius: 50%; background: #e2e8f0; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; color: #64748b;">
+                                        {{ s.n|first|upper }}
+                                    </div>
+                                    {% endif %}
+                                    <span style="font-weight: 600; color: #1e3a8a;">{{ s.n }}</span>
+                                </div>
+                            </td>
+                            <td style="font-family: monospace; font-size: 13px; color: #475569;">{{ s.e }}</td>
+                            <td style="color: #64748b; font-size: 14px;">{{ s.m }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                {% else %}
+                <div class="empty-state">
+                    <i class="fas fa-user-slash"></i>
+                    <p>No students enrolled in this class yet.</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+</body>
+
+</html>

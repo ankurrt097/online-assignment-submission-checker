@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Submissions - {{ assignment.title }}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% include 'includes/_shared_styles.html' %}
+    <script src="https://kit.fontawesome.com/7a4b62b0a4.js" crossorigin="anonymous"></script>
+</head>
+
+<body>
+
+    {% include 'includes/_teacher_sidebar.html' %}
+
+    <div class="main">
+
+        <a href="{% url 'teacher_assignments' %}" class="back-btn">
+            <i class="fas fa-arrow-left"></i> Back to Assignments
+        </a>
+
+        <div class="page-header">
+            <div>
+                <h1><i class="fas fa-file-alt"></i> Assignment Submissions</h1>
+                <p>Tracking work for: <strong>{{ assignment.title }}</strong> | Subject: <strong
+                        style="color: #4f46e5;">{{ assignment.subject.name|default:"General" }}</strong></p>
+            </div>
+            <div
+                style="background: rgba(37, 99, 235, 0.1); color: #2563eb; padding: 8px 16px; border-radius: 20px; font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 8px;">
+                <i class="fas fa-users"></i> {{ total_submissions }} Submission(s)
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-body" style="padding: 0;">
+                {% if submissions %}
+                <table>
+                    <thead>
+                        <tr>
+                            <th style="width: 50px;">#</th>
+                            <th>Student</th>
+                            <th>Enrollment No.</th>
+                            <th>Email</th>
+                            <th>Submitted At</th>
+                            <th>Status</th>
+                            <th style="text-align: right;">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for s in submissions %}
+                        <tr>
+                            <td>{{ forloop.counter }}</td>
+                            <td>
+                                <div style="display: flex; align-items: center; gap: 12px;">
+                                    {% if s.p %}
+                                    <img src="{{ s.p }}"
+                                        style="width: 35px; height: 35px; border-radius: 50%; object-fit: cover; border: 2px solid #e2e8f0;">
+                                    {% else %}
+                                    <div
+                                        style="width: 35px; height: 35px; border-radius: 50%; background: #e2e8f0; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 600; color: #64748b; border: 2px solid #e2e8f0;">
+                                        {{ s.n|first|upper }}
+                                    </div>
+                                    {% endif %}
+                                    <span style="font-weight: 600; color: #1e3a8a;">{{ s.n }}</span>
+                                </div>
+                            </td>
+                            <td style="font-family: monospace; color: #475569;">{{ s.e }}</td>
+                            <td style="color: #64748b; font-size: 13px;">{{ s.m }}</td>
+                            <td>
+                                <div style="display: flex; flex-direction: column;">
+                                    <span style="font-size: 14px; color: #1e293b;">{{ s.d }}</span>
+                                </div>
+                            </td>
+                            <td>
+                                {% if s.status == 'correct' %}
+                                <span
+                                    style="background: #dcfce7; color: #166534; padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 600; text-transform: uppercase;">Correct</span>
+                                {% elif s.status == 'incorrect' %}
+                                <span
+                                    style="background: #fee2e2; color: #991b1b; padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 600; text-transform: uppercase;">Incorrect</span>
+                                {% else %}
+                                <span
+                                    style="background: #fef3c7; color: #92400e; padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 600; text-transform: uppercase;">Pending</span>
+                                {% endif %}
+                            </td>
+                            <td style="text-align: right; display: flex; gap: 8px; justify-content: flex-end;">
+                                <a href="{{ s.file.url }}" class="btn-primary" target="_blank"
+                                    style="padding: 6px 12px; font-size: 12px; background: #f1f5f9; color: #475569; border: 1px solid #e2e8f0;">
+                                    <i class="fas fa-eye"></i> View
+                                </a>
+                                <a href="{% url 'check_submission' s.id %}" class="btn-primary"
+                                    style="padding: 6px 12px; font-size: 12px;">
+                                    <i class="fas fa-check-circle"></i> Check
+                                </a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+
+                    </tbody>
+                </table>
+                {% else %}
+                <div class="empty-state">
+                    <i class="fas fa-inbox"></i>
+                    <p>No submissions yet for this assignment.</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+</body>
+
+</html>

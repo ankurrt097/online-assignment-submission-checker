@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Add Student - {{ classroom.name }}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% include 'includes/_shared_styles.html' %}
+    <script src="https://kit.fontawesome.com/7a4b62b0a4.js" crossorigin="anonymous"></script>
+</head>
+
+<body>
+
+    {% include 'includes/_teacher_sidebar.html' %}
+
+    <div class="main">
+        <a href="{% url 'class_detail' classroom.id %}" class="back-btn">
+            <i class="fas fa-arrow-left"></i> Back to Class Details
+        </a>
+
+        <div class="page-header">
+            <div>
+                <h1><i class="fas fa-user-plus"></i> Add Student</h1>
+                <p>Enrolling into <strong>{{ classroom.name }}</strong></p>
+            </div>
+        </div>
+
+        <div class="card" style="max-width: 600px;">
+            <div class="card-body">
+                {% if messages %}
+                <ul class="messages" style="padding: 0; margin-bottom: 20px;">
+                    {% for message in messages %}
+                    <li class="alert {% if message.tags == 'error' %}alert-danger{% else %}alert-success{% endif %}"
+                        style="list-style: none;">
+                        {{ message }}
+                    </li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+
+                <form method="POST">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <label for="student_id"><i class="fas fa-user-graduate" style="margin-right: 8px;"></i> Select
+                            Student to Enroll</label>
+                        <select name="student_id" id="student_id" required>
+                            <option value="" disabled selected>-- Choose a student --</option>
+                            {% for student in students %}
+                            <option value="{{ student.id }}">{{ student.username }} ({{ student.email }})</option>
+                            {% endfor %}
+                        </select>
+                        <p style="font-size: 11px; color: #64748b; margin-top: 8px; font-style: italic;">
+                            Only students not already in this class will appear here.
+                        </p>
+                    </div>
+
+                    <div style="margin-top: 30px;">
+                        <button type="submit" class="btn-primary" style="width: 100%; justify-content: center;">
+                            <i class="fas fa-plus-circle"></i> Add Student to Class
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+</body>
+
+</html>

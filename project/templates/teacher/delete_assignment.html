@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Delete Assignment - Teacher Panel</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% include 'includes/_shared_styles.html' %}
+    <script src="https://kit.fontawesome.com/7a4b62b0a4.js" crossorigin="anonymous"></script>
+</head>
+
+<body>
+
+    {% include 'includes/_teacher_sidebar.html' %}
+
+    <div class="main">
+        <a href="{% url 'teacher_assignments' %}" class="back-btn">
+            <i class="fas fa-arrow-left"></i> Back to Assignments
+        </a>
+
+        <div class="page-header">
+            <div>
+                <h1><i class="fas fa-trash-alt"></i> Delete Assignment</h1>
+                <p>Confirm the removal of this academic assignment.</p>
+            </div>
+        </div>
+
+        <div class="card" style="max-width: 500px; margin: 0 auto; text-align: center;">
+            <div class="card-body" style="padding: 40px;">
+                <i class="fas fa-exclamation-triangle"
+                    style="font-size: 60px; color: #ef4444; margin-bottom: 20px;"></i>
+                <h2 style="color: #1e3a8a; margin-bottom: 15px;">Are you sure?</h2>
+                <p style="color: #64748b; margin-bottom: 30px; line-height: 1.6;">
+                    You are about to permanently delete <strong>"{{ assignment.title }}"</strong>.<br>
+                    This action cannot be undone and all student submissions for this assignment will be lost.
+                </p>
+
+                <form method="POST">
+                    {% csrf_token %}
+                    <div style="display: flex; gap: 12px; justify-content: center;">
+                        <button type="submit" class="btn-danger" style="padding: 12px 30px;">
+                            <i class="fas fa-trash"></i> Yes, Delete Permanent
+                        </button>
+                        <a href="{% url 'teacher_assignments' %}" class="btn-secondary" style="padding: 12px 30px;">
+                            Cancel
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+</body>
+
+</html>

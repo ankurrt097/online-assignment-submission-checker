@@ -1,0 +1,33 @@
+<!-- Student Sidebar Include -->
+<div class="sidebar">
+    <div class="sidebar-brand">
+        {% if request.user.studentprofile.profile_pic %}
+        <img src="{{ request.user.studentprofile.profile_pic.url }}" class="brand-avatar" style="object-fit: cover;">
+        {% else %}
+        <div class="brand-avatar">{{ request.user.username|first|upper }}</div>
+        {% endif %}
+        <span class="brand-name">{{ request.user.username }}</span>
+        <span class="brand-role">Student</span>
+    </div>
+
+    <nav class="sidebar-nav">
+        <a href="{% url 'student_dashboard' %}"
+            class="nav-item {% if request.resolver_match.url_name == 'student_dashboard' %}active{% endif %}">
+            <i class="fas fa-home"></i> <span>Dashboard</span>
+        </a>
+        <a href="{% url 'student_profile' %}"
+            class="nav-item {% if request.resolver_match.url_name == 'student_profile' %}active{% endif %}">
+            <i class="fas fa-user-circle"></i> <span>My Profile</span>
+        </a>
+        <a href="{% url 'student_assignments' %}"
+            class="nav-item {% if request.resolver_match.url_name == 'student_assignments' %}active{% endif %}">
+            <i class="fas fa-book-open"></i> <span>My Assignments</span>
+        </a>
+    </nav>
+
+    <div class="sidebar-footer">
+        <a href="{% url 'logout' %}" class="logout-btn">
+            <i class="fas fa-sign-out-alt"></i> Logout
+        </a>
+    </div>
+</div>

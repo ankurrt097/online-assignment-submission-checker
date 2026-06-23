@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - View Classes</title>
+    {% include 'includes/_shared_styles.html' %}
+    <script src="https://kit.fontawesome.com/7a4b62b0a4.js" crossorigin="anonymous"></script>
+</head>
+
+<body>
+
+    {% include 'includes/_admin_sidebar.html' %}
+
+    <div class="main">
+        <div class="page-header">
+            <div>
+                <h1>📋 All Classes</h1>
+                <p>Overview of all academic tracks and assigned teachers.</p>
+            </div>
+            <a href="{% url 'create_class' %}" class="btn-primary">
+                <i class="fas fa-plus"></i> Add New Class
+            </a>
+        </div>
+
+        <div class="card">
+            <div class="card-body" style="padding: 0;">
+                {% if classes %}
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Class Name</th>
+                            <th>Semester</th>
+                            
+                            <th>Students Count</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for clroom in classes %}
+                        <tr>
+                            <td style="font-weight: 600; color: #1e3a8a;">{{ clroom.name }}</td>
+                            <td>
+                                <span
+                                    style="background: #eff6ff; color: #1d4ed8; padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 600;">
+                                    Semester {{ clroom.semester }}
+                                </span>
+                            </td>
+            
+                            <td>
+                                <span style="color: #64748b; font-size: 14px;">
+                                    <i class="fas fa-users" style="margin-right: 5px; color: #94a3b8;"></i>
+                                    {{ clroom.students.count }} Enrolled
+                                </span>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                {% else %}
+                <div class="empty-state">
+                    <i class="fas fa-folder-open"></i>
+                    <p>No classes have been created yet.</p>
+                    <a href="{% url 'create_class' %}" class="btn-primary" style="margin-top: 15px;">Create First
+                        Class</a>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <div style="margin-top: 20px;">
+            <a href="{% url 'admin_dashboard' %}" class="back-btn"> Back to Dashboard</a>
+        </div>
+    </div>
+
+</body>
+
+</html>

@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View Courses - Admin Control</title>
+    {% include 'includes/_shared_styles.html' %}
+    <script src="https://kit.fontawesome.com/7a4b62b0a4.js" crossorigin="anonymous"></script>
+</head>
+
+<body>
+
+    {% include 'includes/_admin_sidebar.html' %}
+
+    <div class="main">
+        <div class="page-header">
+            <div>
+                <h1>📁 Course Management</h1>
+                <p>View and manage all courses and their respective semesters.</p>
+            </div>
+            <a href="{% url 'create_course' %}" class="btn-primary">
+                <i class="fas fa-plus"></i> Add New Course
+            </a>
+        </div>
+
+        <div class="card">
+            <div class="card-body">
+                <table style="width: 100%; border-collapse: collapse;">
+                    <thead>
+                        <tr style="border-bottom: 2px solid #eef2f6; text-align: left;">
+                            <th style="padding: 12px;">Course Name</th>
+                            <th style="padding: 12px;">Total Semesters</th>
+                            <th style="padding: 12px;">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for course in courses %}
+                        <tr style="border-bottom: 1px solid #f1f5f9;">
+                            <td style="padding: 12px;">
+                                <div style="font-weight: 600; color: #1e3a8a;">{{ course.name }}</div>
+                            </td>
+                            <td style="padding: 12px;">
+                                <div style="display: flex; gap: 5px; flex-wrap: wrap;">
+                                    {% for semester in course.semesters.all %}
+                                    <span
+                                        style="background: #eef2f6; padding: 2px 8px; border-radius: 12px; font-size: 11px; color: #475569;">
+                                        Sem {{ semester.semester_number }}
+                                    </span>
+                                    {% endfor %}
+                                </div>
+                            </td>
+                            <td style="padding: 12px;">
+                                <div style="display: flex; gap: 10px;">
+                                    <!-- Add edit/delete if needed later -->
+                                    <span style="color: #64748b; font-size: 12px;">Integrated</span>
+                                </div>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="3" style="text-align: center; padding: 40px; color: #64748b;">
+                                No courses found. <a href="{% url 'create_course' %}">Create one now</a>.
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div style="margin-top: 20px;">
+            <a href="{% url 'admin_dashboard' %}" class="back-btn"><i class="fas fa-arrow-left"></i> Back to
+                Dashboard</a>
+        </div>
+    </div>
+
+</body>
+
+</html>

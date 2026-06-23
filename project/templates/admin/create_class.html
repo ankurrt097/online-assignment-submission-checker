@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Create Class</title>
+    {% include 'includes/_shared_styles.html' %}
+</head>
+
+<body>
+
+    {% include 'includes/_admin_sidebar.html' %}
+
+    <div class="main">
+        <div class="page-header">
+            <div>
+                <h1>🏫 Create New Class</h1>
+                <p>Define a class name and semester.</p>
+            </div>
+        </div>
+
+        <div class="card" style="max-width: 600px;">
+            <div class="card-body">
+                {% if messages %}
+                {% for message in messages %}
+                <div class="alert {% if message.tags == 'error' %}alert-error{% else %}alert-success{% endif %}">
+                    {{ message }}
+                </div>
+                {% endfor %}
+                {% endif %}
+
+                <form method="POST">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <label>Class Name</label>
+                        <input type="text" name="name" placeholder="e.g. BCA" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Semester (1-8)</label>
+                        <input type="number" name="semester" min="1" max="8" value="1" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Assign Primary Teacher (Optional)</label>
+                        <select name="teacher_id">
+                            <option value="">-- No Teacher Assigned --</option>
+                            {% for teacher in teachers %}
+                            <option value="{{ teacher.id }}">{{ teacher.username }} ({{ teacher.email }})</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <button type="submit" class="btn-primary" style="width: 100%; justify-content: center;">
+                        Create Class
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <div style="margin-top: 20px;">
+            <a href="{% url 'admin_dashboard' %}" class="back-btn"> Back to Dashboard</a>
+        </div>
+    </div>
+
+</body>
+
+</html>

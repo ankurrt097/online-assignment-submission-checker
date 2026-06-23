@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Profile - Teacher Portal</title>
+    {% include 'includes/_shared_styles.html' %}
+    <script src="https://kit.fontawesome.com/7a4b62b0a4.js" crossorigin="anonymous"></script>
+</head>
+
+<body>
+
+    {% include 'includes/_teacher_sidebar.html' %}
+
+    <div class="main">
+        <a href="{% url 'teacher_profile' %}" class="back-btn">
+            <i class="fas fa-arrow-left"></i> Back to Profile
+        </a>
+
+        <div class="page-header">
+            <div>
+                <h1><i class="fas fa-user-cog"></i> Edit Academic Profile</h1>
+                <p>Keep your qualifications and contact information up to date.</p>
+            </div>
+        </div>
+
+        <div class="card" style="max-width: 600px;">
+            <div class="card-body">
+                <form method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+
+                    <div class="form-group">
+                        <label>Profile Picture</label>
+                        <input type="file" name="profile_pic" accept="image/*">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Qualification</label>
+                        <input type="text" name="qualification" value="{{ profile.qualification }}"
+                            placeholder="e.g. Ph.D. in Computer Science" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Experience (Years)</label>
+                        <input type="number" name="experience" value="{{ profile.experience }}" placeholder="e.g. 5"
+                            min="0" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Phone Number</label>
+                        <input type="text" name="phone" value="{{ profile.phone }}" placeholder="+91 XXXXXXXXXX"
+                            required>
+                    </div>
+
+                    <div style="display: flex; gap: 12px; margin-top: 30px;">
+                        <button type="submit" class="btn-primary" style="flex: 1; justify-content: center;">Save
+                            Profile</button>
+                        <a href="{% url 'teacher_profile' %}" class="btn-secondary"
+                            style="flex: 1; justify-content: center;">Cancel</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+</body>
+
+</html>

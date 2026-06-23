@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Assignment Details - {{ assignment.title }}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% include 'includes/_shared_styles.html' %}
+    <script src="https://kit.fontawesome.com/7a4b62b0a4.js" crossorigin="anonymous"></script>
+</head>
+
+<body>
+
+    {% include 'includes/_teacher_sidebar.html' %}
+
+    <div class="main">
+        <a href="{% url 'teacher_assignments' %}" class="back-btn">
+            <i class="fas fa-arrow-left"></i> Back to Assignments
+        </a>
+
+        <div class="page-header">
+            <div>
+                <h1><i class="fas fa-info-circle"></i> Assignment Details</h1>
+                <p>Viewing particulars for <strong>{{ assignment.title }}</strong></p>
+            </div>
+            <div style="display: flex; gap: 10px;">
+                <a href="{% url 'edit_assignment' assignment.id %}" class="btn-primary"
+                    style="background: white; color: #2563eb; border: 1.5px solid #2563eb;">
+                    <i class="fas fa-edit"></i> Edit
+                </a>
+                <a href="{% url 'submissions' assignment.id %}" class="btn-primary">
+                    <i class="fas fa-file-invoice"></i> View Submissions
+                </a>
+            </div>
+        </div>
+
+        <div class="card" style="max-width: 800px;">
+            <div class="card-body">
+                <div
+                    style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 25px; margin-bottom: 30px;">
+                    <div>
+                        <label
+                            style="display: block; font-size: 12px; font-weight: 600; color: #64748b; text-transform: uppercase;">Classroom</label>
+                        <span style="font-size: 16px; color: #1e3a8a; font-weight: 600;">{{ assignment.classroom.name
+                            }}</span>
+                        <div style="font-size: 11px; color: #64748b; margin-top: 2px;">Semester {{ assignment.semester
+                            }}</div>
+                    </div>
+                    <div>
+                        <label
+                            style="display: block; font-size: 12px; font-weight: 600; color: #64748b; text-transform: uppercase;">Subject</label>
+                        <span style="font-size: 16px; color: #4f46e5; font-weight: 600;">{{
+                            assignment.subject.name|default:"General" }}</span>
+                    </div>
+                    <div>
+                        <label
+                            style="display: block; font-size: 12px; font-weight: 600; color: #64748b; text-transform: uppercase;">Deadline</label>
+                        <span style="font-size: 16px; color: #ef4444; font-weight: 600;">{{ assignment.deadline|date:"d
+                            M Y" }}</span>
+                    </div>
+                </div>
+
+                <div style="margin-bottom: 30px;">
+                    <label
+                        style="display: block; font-size: 12px; font-weight: 600; color: #64748b; text-transform: uppercase; margin-bottom: 10px;">Description</label>
+                    <div
+                        style="background: #f8fafc; padding: 20px; border-radius: 12px; color: #334155; line-height: 1.6; border: 1px solid #e2e8f0;">
+                        {{ assignment.description|linebreaks }}
+                    </div>
+                </div>
+
+                {% if assignment.file %}
+                <div
+                    style="display: flex; align-items: center; justify-content: space-between; background: #eff6ff; padding: 15px 20px; border-radius: 12px; border: 1px border-blue-100;">
+                    <div style="display: flex; align-items: center; gap: 12px;">
+                        <i class="fas fa-file-pdf" style="font-size: 24px; color: #2563eb;"></i>
+                        <div>
+                            <p style="font-weight: 600; color: #1e40af; font-size: 14px;">Assignment Instructions
+                                Attachment</p>
+                            <p style="font-size: 12px; color: #60a5fa;">Click to view or download the attachment</p>
+                        </div>
+                    </div>
+                    <a href="{{ assignment.file.url }}" class="btn-primary" target="_blank"
+                        style="padding: 8px 16px; font-size: 13px;">
+                        <i class="fas fa-download"></i> Download
+                    </a>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+</body>
+
+</html>

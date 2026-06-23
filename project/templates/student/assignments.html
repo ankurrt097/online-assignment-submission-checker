@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Assignments - Student Portal</title>
+    {% include 'includes/_shared_styles.html' %}
+    <script src="https://kit.fontawesome.com/7a4b62b0a4.js" crossorigin="anonymous"></script>
+</head>
+
+<body>
+
+    {% include 'includes/_student_sidebar.html' %}
+
+    <div class="main">
+        <div class="page-header">
+            <div>
+                <h1>📚 My Assignments</h1>
+                <p>Viewing assignments for <strong>
+                        {{ profile.course.name }} - Sem {{ profile.semester.semester_number }}</strong></p>
+            </div>
+        </div>
+
+        {% if messages %}
+        {% for message in messages %}
+        <div class="alert {% if message.tags == 'error' %}alert-error{% else %}alert-success{% endif %}">
+            {{ message }}
+        </div>
+        {% endfor %}
+        {% endif %}
+
+        {% if assignments %}
+        <div class="cards-grid">
+            {% for a in assignments %}
+            <div class="card" style="border-top: 4px solid #2563eb;">
+                <div class="card-body">
+                    <div
+                        style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 15px;">
+                        <div style="flex: 1;">
+                            <h3 style="color: #1e3a8a; font-size: 18px; margin-bottom: 5px;">{{ a.n }}</h3>
+                            <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                                <span
+                                    style="background: #eef2ff; color: #4f46e5; padding: 2px 10px; border-radius: 12px; font-size: 11px; font-weight: 600;">
+                                    <i class="fas fa-book"></i> {{ a.s }}
+                                </span>
+                                <span
+                                    style="background: #f8fafc; color: #64748b; padding: 2px 10px; border-radius: 12px; font-size: 11px; font-weight: 600; border: 1px solid #e2e8f0;">
+                                    <i class="fas fa-university"></i> {{ a.c }}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <p style="color: #475569; font-size: 14px; margin-bottom: 20px; line-height: 1.6;">
+                        {{ a.description }}
+                    </p>
+
+                    <div style="display: flex; flex-direction: column; gap: 8px; margin-bottom: 22px;">
+                        <div style="display: flex; align-items: center; gap: 8px; font-size: 13px; color: #475569;">
+                            <i class="fas fa-calendar-alt" style="color: #ef4444;"></i>
+                            <span>Deadline: <strong style="color: #ef4444">{{ a.deadline|date:"d M, Y" }}</strong></span>
+                        </div>
+                        {% if a.file %}
+                        <div style="display: flex; align-items: center; gap: 8px; font-size: 13px; color: #475569;">
+                            <i class="fas fa-file-download" style="color: #2563eb;"></i>
+                            <a href="{{ a.file.url }}" target="_blank"
+                                style="color: #2563eb; text-decoration: none; font-weight: 500;">Download Attachment</a>
+                        </div>
+                        {% endif %}
+                    </div>
+
+                    {% if a.id in submitted_ids %}
+                    <div
+                        style="display: flex; flex-direction: column; gap: 10px; border-top: 1px solid #f1f5f9; margin-top: 15px; padding-top: 15px;">
+                        <div
+                            style="background: #f0fdf4; color: #166534; padding: 8px; border-radius: 8px; text-align: center; font-size: 12px; font-weight: 600; border: 1px solid #bbf7d0;">
+                            <i class="fas fa-check-circle"></i> SUCCESSFULLY SUBMITTED
+                        </div>
+
+                        <div style="text-align: center; margin-top: 5px;">
+                            {% if a.status == 'correct' %}
+                            <span
+                                style="background: #dcfce7; color: #166534; padding: 6px 15px; border-radius: 20px; font-size: 12px; font-weight: 700; border: 2px solid #bef264;">
+                                <i class="fas fa-certificate"></i> RESULT: RIGHT (Correct)
+                            </span>
+                            {% elif a.status == 'incorrect' %}
+                            <span
+                                style="background: #fee2e2; color: #991b1b; padding: 6px 15px; border-radius: 20px; font-size: 12px; font-weight: 700; border: 2px solid #fecaca;">
+                                <i class="fas fa-exclamation-circle"></i> RESULT: WRONG (Incorrect)
+                            </span>
+                            {% else %}
+                            <span
+                                style="background: #fef3c7; color: #92400e; padding: 6px 15px; border-radius: 20px; font-size: 12px; font-weight: 700; border: 2px solid #fde68a;">
+                                <i class="fas fa-hourglass-half"></i> PENDING REVIEW
+                            </span>
+                            {% endif %}
+                        </div>
+                    </div>
+                    {% else %}
+                    <a href="{% url 'submit_assignment' a.id %}" class="btn-primary"
+                        style="width: 100%; justify-content: center; padding: 12px; margin-top: 10px;">
+                        <i class="fas fa-upload"></i> SUBMIT ASSIGNMENT
+                    </a>
+                    {% endif %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="card">
+            <div class="card-body" style="text-align: center; padding: 60px 20px;">
+                <i class="fas fa-inbox"
+                    style="font-size: 50px; color: #cbd5e0; margin-bottom: 20px; display: block;"></i>
+                <h2 style="color: #475569; font-size: 20px; margin-bottom: 10px;">No Assignments Found</h2>
+                <p style="color: #94a3b8;">There are no assignments posted for your current semester yet.
+                </p>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+
+</body>
+
+</html>

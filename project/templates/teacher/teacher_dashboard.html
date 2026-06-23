@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Teacher Dashboard</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% include 'includes/_shared_styles.html' %}
+    <script src="https://kit.fontawesome.com/7a4b62b0a4.js" crossorigin="anonymous"></script>
+</head>
+
+<body>
+
+    {% include 'includes/_teacher_sidebar.html' %}
+
+
+    <div class="main">
+
+        <div class="page-header">
+            <div>
+                <h1>Welcome, {{ request.user.username }}</h1>
+                <p>Teacher Portal | Academic Overview</p>
+            </div>
+        </div>
+
+        <div class="cards-grid">
+            <div class="stat-card">
+                <div class="stat-icon" style="background: rgba(37, 99, 235, 0.1); color: #2563eb;">
+                    <i class="fas fa-school"></i>
+                </div>
+                <div class="stat-info">
+                    <h3>Total Semesters</h3>
+                    <p class="counter">{{ total_semesters }}</p>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon" style="background: rgba(16, 185, 129, 0.1); color: #10b981;">
+                    <i class="fas fa-users"></i>
+                </div>
+                <div class="stat-info">
+                    <h3>Total Students</h3>
+                    <p class="counter">{{ total_students }}</p>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon" style="background: rgba(245, 158, 11, 0.1); color: #f59e0b;">
+                    <i class="fas fa-book"></i>
+                </div>
+                <div class="stat-info">
+                    <h3>Total Assignments</h3>
+                    <p class="counter">{{ total_assignments }}</p>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon" style="background: rgba(139, 92, 246, 0.1); color: #8b5cf6;">
+                    <i class="fas fa-book-open"></i>
+                </div>
+                <div class="stat-info">
+                    <h3>Total Subjects</h3>
+                    <p class="counter">{{ total_subjects }}</p>
+                </div>
+            </div>
+
+            <a href="{% url 'all_submissions' %}" class="stat-card clickable-card" style="text-decoration: none;">
+                <div class="stat-icon" style="background: rgba(139, 92, 246, 0.1); color: #8b5cf6;">
+                    <i class="fas fa-file-invoice"></i>
+                </div>
+                <div class="stat-info">
+                    <h3>Submissions</h3>
+                    <p class="counter">{{ total_submissions }}</p>
+                </div>
+            </a>
+        </div>
+
+        <div
+            style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 35px;">
+            <a href="{% url 'teacher_semesters' %}" class="btn-primary" style="justify-content: center; padding: 15px;">
+                <i class="fas fa-chalkboard"></i> My Semesters
+            </a>
+            <a href="{% url 'create_assignment' %}" class="btn-primary"
+                style="justify-content: center; padding: 15px; background: white; color: #2563eb; border: 1.5px solid #2563eb;">
+                <i class="fas fa-plus-circle"></i> Create Assignment
+            </a>
+            <a href="{% url 'teacher_assignments' %}" class="btn-secondary"
+                style="justify-content: center; padding: 15px;">
+                <i class="fas fa-tasks"></i> My Assignments
+            </a>
+        </div>
+
+        <div class="card">
+            <div class="section-header"
+                style="padding: 20px 28px; border-bottom: 1px solid #f1f5f9; display: flex; justify-content: space-between; align-items: center;">
+                <h2 style="font-size: 16px; color: #1e3a8a;"><i class="fas fa-clock"></i> Recent Submissions</h2>
+                <a href="{% url 'all_submissions' %}"
+                    style="font-size: 13px; color: #2563eb; text-decoration: none; font-weight: 600;">View All <i
+                        class="fas fa-arrow-right"></i></a>
+            </div>
+            <div class="card-body" style="padding: 0;">
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Student</th>
+                                <th>Assignment</th>
+                                <th>Submitted At</th>
+                                <th style="text-align: right;">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for sub in recent_submissions %}
+                            <tr>
+                                <td>
+                                    <div style="display: flex; align-items: center; gap: 12px;">
+                                        {% if sub.p %}
+                                        <img src="{{ sub.p }}"
+                                            style="width: 32px; height: 32px; border-radius: 50%; object-fit: cover;">
+                                        {% else %}
+                                        <div
+                                            style="width: 32px; height: 32px; border-radius: 50%; background: #e2e8f0; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; color: #64748b;">
+                                            {{ sub.n|first|upper }}
+                                        </div>
+                                        {% endif %}
+                                        <span style="font-weight: 600; color: #1e3a8a;">{{ sub.n }}</span>
+                                    </div>
+                                </td>
+                                <td><span style="color: #475569; font-weight: 500;">{{ sub.assignment.title }}</span>
+                                </td>
+                                <td style="color: #64748b; font-size: 13px;">{{ sub.d }}</td>
+                                <td style="text-align: right;">
+                                    <a href="{% url 'submissions' sub.assignment.id %}" class="btn-primary"
+                                        style="padding: 6px 14px; font-size: 12px;">Review</a>
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="4" style="text-align: center; padding: 40px; color: #94a3b8;">
+                                    <i class="fas fa-inbox"
+                                        style="font-size: 24px; margin-bottom: 10px; display: block;"></i>
+                                    No recent submissions found.
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+
+</html>

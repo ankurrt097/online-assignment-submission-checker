@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Add Subject</title>
+    {% include 'includes/_shared_styles.html' %}
+</head>
+
+<body>
+
+    {% include 'includes/_admin_sidebar.html' %}
+
+    <div class="main">
+        <div class="page-header">
+            <div>
+                <h1>📚 Add New Subject</h1>
+                <p>Assign a teacher to a specific subject in a classroom.</p>
+            </div>
+        </div>
+
+        <div class="card" style="max-width: 600px;">
+            <div class="card-body">
+                {% if messages %}
+                {% for message in messages %}
+                <div class="alert {% if message.tags == 'error' %}alert-error{% else %}alert-success{% endif %}">
+                    {{ message }}
+                </div>
+                {% endfor %}
+                {% endif %}
+
+                <form method="POST">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <label>Subject Name</label>
+                        <input type="text" name="name" placeholder="e.g. Mathematics" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Select Semester</label>
+                        <select name="semester_id" required>
+                            <option value="" disabled selected>Select a semester</option>
+                            {% for semester in semesters %}
+                            <option value="{{ semester.id }}">
+                                {{ semester.course.name }} - Semester {{ semester.semester_number }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Assign Teacher</label>
+                        <select name="teacher_id" required>
+                            <option value="" disabled selected>Select a teacher</option>
+                            {% for teacher in teachers %}
+                            <option value="{{ teacher.id }}">{{ teacher.username }} ({{ teacher.email }})</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <button type="submit" class="btn-primary"
+                        style="width: 100%; justify-content: center; background: #8b5cf6; border-color: #8b5cf6;">
+                        Add and Assign Subject
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <div style="margin-top: 20px;">
+            <a href="{% url 'admin_dashboard' %}" class="back-btn"> Back to Dashboard</a>
+        </div>
+    </div>
+
+</body>
+
+</html>

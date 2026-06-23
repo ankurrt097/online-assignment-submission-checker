@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teacher List - Admin Portal</title>
+    {% include 'includes/_shared_styles.html' %}
+    <script src="https://kit.fontawesome.com/7a4b62b0a4.js" crossorigin="anonymous"></script>
+</head>
+
+<body>
+    {% include 'includes/_admin_sidebar.html' %}
+    <div class="main">
+        <div class="page-header">
+            <div>
+                <h1><i class="fas fa-chalkboard-teacher"></i> All Teachers</h1>
+                <p>Overview and management of all registered teacher accounts.</p>
+            </div>
+            <a href="{% url 'create_teacher' %}" class="btn-primary">
+                <i class="fas fa-user-plus"></i> Add New Teacher
+            </a>
+        </div>
+
+        <div class="card">
+            <div class="card-body" style="padding: 0;">
+                {% if teachers %}
+                <table>
+                    <thead>
+                        <tr>
+                            <th style="width: 60px;">#</th>
+                            <th>Username</th>
+                            <th>Email Address</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for teacher in teachers %}
+                        <tr>
+                            <td>{{ forloop.counter }}</td>
+                            <td style="font-weight: 600; color: #1e3a8a;">{{ teacher.username }}</td>
+                            <td style="color: #64748b;">{{ teacher.email }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                {% else %}
+                <div class="empty-state">
+                    <i class="fas fa-users-slash"></i>
+                    <p>No teachers have been registered yet.</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <div style="margin-top: 20px;">
+            <a href="{% url 'admin_dashboard' %}" class="back-btn"><i class="fas fa-arrow-left"></i> Back to
+                Dashboard</a>
+        </div>
+    </div>
+</body>
+
+</html>

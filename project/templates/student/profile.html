@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Profile</title>
+    {% include 'includes/_shared_styles.html' %}
+    <script src="https://kit.fontawesome.com/7a4b62b0a4.js" crossorigin="anonymous"></script>
+</head>
+
+<body>
+    {% include 'includes/_student_sidebar.html' %}
+    <div class="main">
+        <div class="page-header">
+            <div>
+                <h1>👤 My Profile</h1>
+                <p>Manage your personal information and student details.</p>
+            </div>
+            <a href="{% url 'edit_student_profile' %}" class="btn-primary"><i class="fas fa-edit"></i> Edit Profile</a>
+        </div>
+        <div class="card" style="max-width: 800px;">
+            <div class="card-body">
+                {% if messages %}
+                {% for message in messages %}
+                <div class="alert alert-success">{{ message }}</div>
+                {% endfor %}
+                {% endif %}
+                <div style="display: flex; gap: 40px; align-items: flex-start;">
+                    <div style="flex-shrink: 0; text-align: center;">
+                        {% if profile.profile_pic %}
+                        <img src="{{ profile.profile_pic.url }}"
+                            style="width: 120px; height: 120px; border-radius: 50%; object-fit: cover; margin-bottom: 15px; border: 4px solid #fff; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
+                        {% else %}
+                        <div
+                            style="width: 120px; height: 120px; border-radius: 50%; background: #e2e8f0; display: flex; align-items: center; justify-content: center; font-size: 50px; color: #64748b; margin-bottom: 15px; border: 4px solid #fff; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
+                            {{ request.user.username|first|upper }}
+                        </div>
+                        {% endif %}
+                        <span
+                            style="background: #1e3a8a; color: #fff; padding: 4px 12px; border-radius: 20px; font-size: 11px; font-weight: 600;">Student</span>
+                    </div>
+                    <div style="flex-grow: 1;">
+                        <h2 style="color: #1e3a8a; margin-bottom: 20px;">{{ request.user.username }}</h2>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                            <div>
+                                <label
+                                    style="display: block; font-size: 12px; color: #64748b; font-weight: 600; text-transform: uppercase;">Email
+                                    Address</label>
+                                <p style="font-size: 15px; color: #1e293b; margin-top: 4px;">{{ request.user.email }}
+                                </p>
+                            </div>
+                            <div>
+                                <label
+                                    style="display: block; font-size: 12px; color: #64748b; font-weight: 600; text-transform: uppercase;">Enrollment
+                                    No.</label>
+                                <p style="font-size: 15px; color: #1e293b; margin-top: 4px;">
+                                    {{ profile.enrollment_no|default:"Not Set" }}</p>
+                            </div>
+                            <div>
+                                <label
+                                    style="display: block; font-size: 12px; color: #64748b; font-weight: 600; text-transform: uppercase;">Phone
+                                    Number</label>
+                                <p style="font-size: 15px; color: #1e293b; margin-top: 4px;">
+                                    {{ profile.phone|default:"Not Set" }}</p>
+                            </div>
+                            <div>
+                                <label
+                                    style="display: block; font-size: 12px; color: #64748b; font-weight: 600; text-transform: uppercase;">Semesters
+                                    Enrolled</label>
+                                <p style="font-size: 15px; color: #1e293b; margin-top: 4px;">
+                                    {% for sem in request.user.enrolled_semesters.all %}
+                                    {{ sem.course.name }} (Sem {{ sem.semester_number }})
+                                    {% if not forloop.last %}, {% endif %}
+                                    {% empty %}
+                                    No semesters assigned.
+                                    {% endfor %}
+                                </p>
+                            </div>
+                        </div>
+                        <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #f1f5f9;">
+                            <label
+                                style="display: block; font-size: 12px; color: #64748b; font-weight: 600; text-transform: uppercase;">Bio
+                                / About Me</label>
+                            <p style="font-size: 14px; color: #475569; margin-top: 8px; line-height: 1.6;">
+                                {{ profile.bio|default:"No bio added yet. Tell us something about yourself!" }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

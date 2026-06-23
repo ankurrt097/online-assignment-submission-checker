@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Submit Assignment - Student Portal</title>
+    {% include 'includes/_shared_styles.html' %}
+    <script src="https://kit.fontawesome.com/7a4b62b0a4.js" crossorigin="anonymous"></script>
+    <style>
+        .file-drop-zone {
+            border: 2px dashed #cbd5e1;
+            border-radius: 12px;
+            padding: 40px;
+            text-align: center;
+            background: #f8fafc;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .file-drop-zone:hover {
+            border-color: #2563eb;
+            background: #eff6ff;
+        }
+
+        .file-drop-zone.active {
+            border-color: #2563eb;
+            background: #eff6ff;
+            transform: scale(1.02);
+        }
+
+        .file-drop-zone i {
+            font-size: 40px;
+            color: #94a3b8;
+            margin-bottom: 15px;
+        }
+
+        #id_file {
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+
+    {% include 'includes/_student_sidebar.html' %}
+
+    <div class="main">
+        <a href="{% url 'student_assignments' %}" class="back-btn">⬅ Back to Assignments</a>
+
+        <div class="page-header">
+            <div>
+                <h1>📤 Submit Your Work</h1>
+                <p>Uploading for: <strong>{{ assignment.title }}</strong></p>
+            </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px;">
+            <!-- Assignment Info -->
+            <div class="card">
+                <div class="card-body">
+                    <h2 style="font-size: 18px; color: #1e3a8a; margin-bottom: 20px;">Assignment Details</h2>
+                    <div style="display: flex; flex-direction: column; gap: 15px;">
+                        <div>
+                            <label
+                                style="display: block; font-size: 11px; color: #64748b; font-weight: 600; text-transform: uppercase;">Description</label>
+                            <p style="font-size: 14px; color: #1e293b; line-height: 1.6; margin-top: 5px;">{{
+                                assignment.description }}</p>
+                        </div>
+                        <div style="display: flex; gap: 20px;">
+                            <div>
+                                <label
+                                    style="display: block; font-size: 11px; color: #64748b; font-weight: 600; text-transform: uppercase;">Semester</label>
+                                <p style="font-size: 14px; color: #1e293b; margin-top: 5px;">{{ assignment.semester }}
+                                </p>
+                            </div>
+                            <div>
+                                <label
+                                    style="display: block; font-size: 11px; color: #64748b; font-weight: 600; text-transform: uppercase;">Deadline</label>
+                                <p style="font-size: 14px; color: #ef4444; font-weight: 600; margin-top: 5px;">
+                                    {{ assignment.deadline|date:"d M, Y" }}
+                                </p>
+                            </div>
+                        </div>
+                        {% if assignment.file %}
+                        <div>
+                            <label
+                                style="display: block; font-size: 11px; color: #64748b; font-weight: 600; text-transform: uppercase;">Instructions
+                                File</label>
+                            <a href="{{ assignment.file.url }}" target="_blank"
+                                style="display: inline-flex; align-items: center; gap: 8px; margin-top: 5px; color: #2563eb; text-decoration: none; font-size: 14px; font-weight: 500;">
+                                <i class="fas fa-file-download"></i> View Instructions
+                            </a>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Submission Form -->
+            <div class="card">
+                <div class="card-body">
+                    <h2 style="font-size: 18px; color: #1e3a8a; margin-bottom: 20px;">Upload Submission</h2>
+                    {% if messages %}
+                    {% for message in messages %}
+                    <div class="alert alert-error">{{ message }}</div>
+                    {% endfor %}
+                    {% endif %}
+
+                    <form method="POST" enctype="multipart/form-data" id="submitForm">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <label for="id_file">Select File (PDF, DOCX, ZIP)</label>
+                            <div class="file-drop-zone" onclick="document.getElementById('id_file').click()"
+                                id="dropZone">
+                                <i class="fas fa-cloud-upload-alt"></i>
+                                <p id="fileName">Click to browse or drag and drop</p>
+                                <span style="font-size: 12px; color: #94a3b8;">Max size: 10MB</span>
+                            </div>
+                            <input type="file" name="file" id="id_file" required>
+                        </div>
+
+                        <div style="margin-top: 25px;">
+                            <button type="submit" class="btn-primary"
+                                style="width: 100%; justify-content: center; padding: 12px;">
+                                <i class="fas fa-paper-plane"></i> Finalize Submission
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const fileInput = document.getElementById('id_file');
+        const fileNameDisplay = document.getElementById('fileName');
+        const dropZone = document.getElementById('dropZone');
+
+        fileInput.onchange = () => {
+            if (fileInput.files.length > 0) {
+                fileNameDisplay.innerHTML = `<strong>Selected:</strong> ${fileInput.files[0].name}`;
+                fileNameDisplay.style.color = '#2563eb';
+            }
+        };
+
+        dropZone.ondragover = (e) => {
+            e.preventDefault();
+            dropZone.classList.add('active');
+        };
+
+        dropZone.ondragleave = () => {
+            dropZone.classList.remove('active');
+        };
+
+        dropZone.ondrop = (e) => {
+            e.preventDefault();
+            dropZone.classList.remove('active');
+            if (e.dataTransfer.files.length > 0) {
+                fileInput.files = e.dataTransfer.files;
+                fileNameDisplay.innerHTML = `<strong>Selected:</strong> ${fileInput.files[0].name}`;
+                fileNameDisplay.style.color = '#2563eb';
+            }
+        };
+    </script>
+
+</body>
+
+</html>

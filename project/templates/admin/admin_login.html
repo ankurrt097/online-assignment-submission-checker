@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Admin Login | Portal</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+<script src="https://kit.fontawesome.com/7a4b62b0a4.js" crossorigin="anonymous"></script>
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:'Poppins',sans-serif;
+}
+
+body{
+height:100vh;
+display:flex;
+align-items:center;
+justify-content:center;
+background:linear-gradient(135deg,#020617,#0f172a);
+overflow:hidden;
+color:#f8fafc;
+}
+
+/* Floating background blobs */
+
+.blob{
+position:absolute;
+width:350px;
+height:350px;
+border-radius:50%;
+filter:blur(100px);
+opacity:.25;
+animation:move 20s infinite alternate;
+}
+
+.blob:nth-child(1){
+background:#3b82f6;
+top:-100px;
+left:-120px;
+}
+
+.blob:nth-child(2){
+background:#8b5cf6;
+bottom:-100px;
+right:-120px;
+animation-duration:25s;
+}
+
+@keyframes move{
+from{transform:translate(0,0)}
+to{transform:translate(120px,120px)}
+}
+
+/* Login Card */
+
+.container{
+position:relative;
+z-index:5;
+width:380px;
+padding:45px 40px;
+border-radius:25px;
+background:rgba(255,255,255,0.06);
+backdrop-filter:blur(25px);
+border:1px solid rgba(255,255,255,0.1);
+box-shadow:0 25px 50px rgba(0,0,0,.6);
+animation:fadeIn .8s ease;
+}
+
+@keyframes fadeIn{
+from{
+opacity:0;
+transform:translateY(30px) scale(.95);
+}
+to{
+opacity:1;
+transform:translateY(0) scale(1);
+}
+}
+
+.container h2{
+text-align:center;
+margin-bottom:35px;
+font-weight:600;
+letter-spacing:.5px;
+}
+
+/* Inputs */
+
+.input-box{
+position:relative;
+margin-bottom:22px;
+}
+
+.input-box input{
+width:100%;
+padding:14px 15px 14px 45px;
+border:none;
+border-radius:12px;
+background:rgba(255,255,255,.08);
+color:#fff;
+outline:none;
+font-size:14px;
+border:1px solid rgba(255,255,255,.08);
+transition:.3s;
+}
+
+.input-box input:focus{
+border-color:#3b82f6;
+background:rgba(255,255,255,.12);
+box-shadow:0 0 0 3px rgba(59,130,246,.15);
+}
+
+.input-box i{
+position:absolute;
+left:15px;
+top:50%;
+transform:translateY(-50%);
+color:#94a3b8;
+font-size:14px;
+}
+
+/* Button */
+
+button{
+width:100%;
+padding:14px;
+border:none;
+border-radius:12px;
+background:linear-gradient(135deg,#3b82f6,#2563eb);
+color:white;
+font-weight:600;
+font-size:15px;
+cursor:pointer;
+transition:.35s;
+box-shadow:0 12px 25px rgba(37,99,235,.45);
+margin-top:5px;
+}
+
+button:hover{
+transform:translateY(-2px);
+box-shadow:0 18px 35px rgba(37,99,235,.6);
+filter:brightness(1.1);
+}
+
+/* Footer */
+
+.footer{
+text-align:center;
+margin-top:25px;
+font-size:13px;
+color:#94a3b8;
+}
+
+.footer a{
+color:#3b82f6;
+text-decoration:none;
+font-weight:500;
+}
+
+.footer a:hover{
+text-decoration:underline;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="blob"></div>
+<div class="blob"></div>
+
+<div class="container">
+
+<h2> Admin Login</h2>
+
+<form method="POST">
+{% csrf_token %}
+
+<div class="input-box">
+<i class="fas fa-user"></i>
+<input type="text" name="username" placeholder="Username" required>
+</div>
+
+<div class="input-box">
+<i class="fas fa-lock"></i>
+<input type="password" name="password" placeholder="Password" required>
+</div>
+
+<button type="submit">
+<i class="fas fa-sign-in-alt"></i> Login
+</button>
+
+</form>
+
+<div class="footer">
+<p>Not admin? <a href="{% url 'login' %}">Student / Teacher Login</a></p>
+</div>
+
+</div>
+
+</body>
+
+</html>

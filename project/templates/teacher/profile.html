@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teacher Profile - College Portal</title>
+    {% include 'includes/_shared_styles.html' %}
+    <script src="https://kit.fontawesome.com/7a4b62b0a4.js" crossorigin="anonymous"></script>
+    <style>
+        .profile-container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .profile-card {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+            position: relative;
+        }
+
+        .profile-header {
+            background: linear-gradient(135deg, #1e3a8a, #2563eb, #3b82f6);
+            height: 160px;
+            position: relative;
+        }
+
+        .profile-header-content {
+            position: absolute;
+            bottom: -50px;
+            left: 40px;
+            display: flex;
+            align-items: flex-end;
+            gap: 25px;
+        }
+
+        .profile-avatar-wrapper {
+            position: relative;
+        }
+
+        .profile-avatar {
+            width: 140px;
+            height: 140px;
+            border-radius: 20px;
+            border: 6px solid #fff;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+            object-fit: cover;
+            background: #fff;
+        }
+
+        .profile-avatar-placeholder {
+            width: 140px;
+            height: 140px;
+            border-radius: 20px;
+            border: 6px solid #fff;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+            background: #f1f5f9;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 60px;
+            color: #64748b;
+        }
+
+        .profile-badge {
+            position: absolute;
+            bottom: -10px;
+            right: -10px;
+            background: #10b981;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 700;
+            border: 3px solid #fff;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .profile-basic-info h2 {
+            margin: 0;
+            font-size: 28px;
+            color: #1e293b;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .profile-basic-info p {
+            margin: 0;
+            color: #64748b;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .profile-body {
+            padding: 80px 40px 40px;
+        }
+
+        .info-section {
+            margin-bottom: 35px;
+        }
+
+        .info-section-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 16px;
+            font-weight: 700;
+            color: #1e3a8a;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #f1f5f9;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 25px;
+        }
+
+        .info-item {
+            background: #f8fafc;
+            padding: 15px 20px;
+            border-radius: 12px;
+            border: 1px solid #f1f5f9;
+            transition: all 0.3s ease;
+        }
+
+        .info-item:hover {
+            background: #fff;
+            border-color: #2563eb;
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(37, 99, 235, 0.08);
+        }
+
+        .info-label {
+            display: block;
+            font-size: 11px;
+            color: #94a3b8;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 5px;
+        }
+
+        .info-value {
+            font-size: 15px;
+            color: #1e293b;
+            font-weight: 600;
+        }
+
+        @media (max-width: 768px) {
+            .profile-header-content {
+                flex-direction: column;
+                align-items: center;
+                left: 0;
+                right: 0;
+                bottom: -110px;
+                text-align: center;
+            }
+
+            .profile-body {
+                padding-top: 130px;
+            }
+
+            .info-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    {% include 'includes/_teacher_sidebar.html' %}
+
+    <div class="main">
+        <div class="page-header">
+            <div>
+                <h1><i class="fas fa-id-card"></i> My Academic Profile</h1>
+                <p>View and manage your academic credentials and contact details.</p>
+            </div>
+            <a href="{% url 'edit_teacher_profile' %}" class="btn-primary">
+                <i class="fas fa-user-edit"></i> Edit Profile
+            </a>
+        </div>
+
+        <div class="profile-container">
+            {% if messages %}
+            {% for message in messages %}
+            <div class="alert alert-success">{{ message }}</div>
+            {% endfor %}
+            {% endif %}
+
+            <div class="profile-card">
+                <div class="profile-header">
+                    <div class="profile-header-content">
+                        <div class="profile-avatar-wrapper">
+                            {% if profile.profile_pic %}
+                            <img src="{{ profile.profile_pic.url }}" class="profile-avatar" alt="Profile Picture">
+                            {% else %}
+                            <div class="profile-avatar-placeholder">
+                                {{ request.user.username|first|upper }}
+                            </div>
+                            {% endif %}
+                            <span class="profile-badge">Teacher</span>
+                        </div>
+                        <div class="profile-basic-info"><br><br>
+                            <h2>Prof. {{ request.user.username }}</h2>
+                            <p><i class="far fa-envelope"></i> {{ request.user.email }}</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="profile-body">
+                    <div class="info-section">
+                        <div class="info-section-title">
+                            <i class="fas fa-graduation-cap"></i> Academic Credentials
+                        </div>
+                        <div class="info-grid">
+                            <div class="info-item">
+                                <span class="info-label">Qualification</span>
+                                <div class="info-value">{{ profile.qualification|default:"Not Set" }}</div>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">Years of Experience</span>
+                                <div class="info-value">{{ profile.experience|default:"0" }} Years</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="info-section">
+                        <div class="info-section-title">
+                            <i class="fas fa-address-book"></i> Contact Details
+                        </div>
+                        <div class="info-grid">
+                            <div class="info-item">
+                                <span class="info-label">Email Address</span>
+                                <div class="info-value">{{ request.user.email }}</div>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">Phone Number</span>
+                                <div class="info-value">{{ profile.phone|default:"Not Set" }}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+
+</html>

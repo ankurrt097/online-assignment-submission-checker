@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Dashboard</title>
+    {% include 'includes/_shared_styles.html' %}
+    <script src="https://kit.fontawesome.com/7a4b62b0a4.js" crossorigin="anonymous"></script>
+</head>
+
+<body>
+
+    {% include 'includes/_student_sidebar.html' %}
+
+    <div class="main">
+        <div class="page-header">
+            <div>
+                <h1>Dashboard</h1>
+                <p>Welcome back, <strong>{{ request.user.username }}</strong>! Here's an overview of your studies.</p>
+            </div>
+            <div class="user-info">
+                <span style="font-size: 14px; color: #64748b;">{{ request.user.email }}</span>
+            </div>
+        </div>
+
+        <div class="cards-grid">
+            <div class="stat-card">
+                <i class="fas fa-university"></i>
+                <h3>My Course</h3>
+                <p>{{ profile.course.name|default:"N/A" }}</p>
+            </div>
+            <div class="stat-card" style="border-top-color: #f59e0b;">
+                <i class="fas fa-file-alt" style="color: #fcd34d;"></i>
+                <h3>Total Assignments</h3>
+                <p>{{ total_assignments }}</p>
+            </div>
+            <div class="stat-card" style="border-top-color: #10b981;">
+                <i class="fas fa-check-circle" style="color: #6ee7b7;"></i>
+                <h3>Submitted</h3>
+                <p>{{ total_submissions }}</p>
+            </div>
+        </div>
+
+        <div style="margin-top: 40px; display: grid; grid-template-columns: 2fr 1fr; gap: 28px;">
+            <!-- Recent Assignments -->
+            <div class="card">
+                <div
+                    style="padding: 20px 28px; border-bottom: 1px solid #f1f5f9; display: flex; justify-content: space-between; align-items: center;">
+                    <h2 style="font-size: 18px; color: #1e3a8a;">Latest Assignments</h2>
+                    <a href="{% url 'student_assignments' %}"
+                        style="font-size: 13px; color: #3b82f6; text-decoration: none; font-weight: 600;">View All</a>
+                </div>
+                <div class="card-body" style="padding: 0;">
+                    {% if assignments %}
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Assignment</th>
+                                <th>Subject</th>
+                                <th>Deadline</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for a in assignments|slice:":5" %}
+                            <tr>
+                                <td style="font-weight: 500;">{{ a.n }}</td>
+                                <td>
+                                    <span style="font-weight: 600; color: #4f46e5;">{{ a.s }}</span>
+                                    <div style="font-size: 11px; color: #64748b;">{{ a.c }}</div>
+                                </td>
+                                <td>
+                                    <span style="color: #ef4444; font-size: 13px;">
+                                        {{ a.deadline|date:"d M, Y" }}
+                                    </span>
+                                </td>
+                                <td>
+                                    {% if a.id in submitted_ids %}
+                                    {% if a.status == 'correct' %}
+                                    <span style="color: #166534; font-size: 12px; font-weight: 600;"><i
+                                            class="fas fa-check-double"></i> Correct</span>
+                                    {% elif a.status == 'incorrect' %}
+                                    <span style="color: #b91c1c; font-size: 12px; font-weight: 600;"><i
+                                            class="fas fa-times-circle"></i> Incorrect</span>
+                                    {% else %}
+                                    <span style="color: #92400e; font-size: 12px; font-weight: 600;"><i
+                                            class="fas fa-clock"></i> Pending</span>
+                                    {% endif %}
+                                    {% else %}
+                                    <a href="{% url 'submit_assignment' a.id %}" class="btn-primary"
+                                        style="padding: 6px 14px; font-size: 12px;">Submit</a>
+                                    {% endif %}
+                                </td>
+
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                    {% else %}
+                    <div class="empty-state">
+                        <i class="fas fa-clipboard-list"></i>
+                        <p>No assignments found for your classes.</p>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- My Semesters List -->
+            <div class="card">
+                <div style="padding: 20px 28px; border-bottom: 1px solid #f1f5f9;">
+                    <h2 style="font-size: 18px; color: #1e3a8a;">My Semesters</h2>
+                </div>
+                <div class="card-body">
+                    {% if student_semesters %}
+                    <div style="display: flex; flex-direction: column; gap: 15px;">
+                        {% for sem in student_semesters %}
+                        <div
+                            style="padding: 15px; background: #f8fafc; border-radius: 12px; border-left: 4px solid #2563eb;">
+                            <h4 style="font-size: 15px; color: #1e293b;">
+                                {{ sem.course.name }} (Sem {{ sem.semester_number }})</h4>
+                            <div style="margin-top: 8px; display: flex; flex-direction: column; gap: 4px;">
+                                {% for subject in sem.subjects.all %}
+                                <div style="font-size: 12px; display: flex; justify-content: space-between;">
+                                    <span style="color: #475569; font-weight: 500;">{{ subject.name }}:</span>
+                                    <span style="color: #64748b;">Prof. {{ subject.teacher.username }}</span>
+                                </div>
+                                {% empty %}
+                                <div style="font-size: 11px; color: #94a3b8; font-style: italic;">No subjects assigned
+                                    yet</div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    <p style="font-size: 14px; color: #94a3b8; text-align: center; padding: 20px 0;">You are not
+                        enrolled in any semester yet.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+
+</html>
