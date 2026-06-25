@@ -107,8 +107,11 @@ def admin_dashboard(request):
 
 
 @login_required
-def create_teacher(request):
+from django.conf import settings
+from django.core.mail import send_mail
 
+@login_required
+def create_teacher(request):
 
     if request.method == "POST":
         username = request.POST.get("username")
@@ -117,30 +120,52 @@ def create_teacher(request):
 
         if CustomUser.objects.filter(username=username).exists():
             messages.error(request, "Username already exists!")
-            return redirect('create_teacher')
+            return redirect("create_teacher")
 
         CustomUser.objects.create_user(
             username=username,
             email=email,
             password=password,
-            role='teacher'
+            role="teacher",
         )
 
-        login_url = request.build_absolute_uri(reverse('login'))
+        login_url = request.build_absolute_uri(reverse("login"))
+
+        message = f"""Hello {username},
+
+Your teacher account has been created successfully.
+
+Username: {username}
+Password: {password}
+
+Login here: {login_url}
+
+Please change your password after login.
+
+Regards,
+Admin
+"""
+
         try:
             send_mail(
-        subject="Your Teacher Account Created",
-        message=message,
-        from_email=settings.DEFAULT_FROM_EMAIL,
-        recipient_list=[email],
-        fail_silently=False,
-    )
+                subject="Your Teacher Account Created",
+                message=message,
+                from_email=settings.DEFAULT_FROM_EMAIL,
+                recipient_list=[email],
+                fail_silently=False,
+            )
+            messages.success(request, "Teacher created and email sent successfully!")
+
         except Exception as e:
             print("Email Error:", e)
+            messages.warning(
+                request,
+                f"Teacher created successfully but email could not be sent. Error: {e}"
+            )
 
-    messages.success(request, "Teacher created successfully!")
-    return redirect("admin_dashboard")
+        return redirect("admin_dashboard")
 
+    return render(request, "admin/create_teacher.html")
 
 
 #         send_mail(
