@@ -1,3 +1,7 @@
+import email
+from urllib import request
+from urllib import request
+
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
@@ -10,6 +14,7 @@ import random
 import string
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth import get_user_model
+from dns import message
 
 from myproject import settings
 from .models import PasswordResetOTP
@@ -30,7 +35,8 @@ from django.views.decorators.csrf import ensure_csrf_cookie
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login
 from django.contrib import messages
-
+from django.conf import settings
+from django.core.mail import send_mail
 
 
 @ensure_csrf_cookie
@@ -121,26 +127,22 @@ def create_teacher(request):
         )
 
         login_url = request.build_absolute_uri(reverse('login'))
-        send_mail(
-    subject="Your Teacher Account Created",
-    message=f"""Hello {username},
+        try:
+            send_mail(
+        subject="Your Teacher Account Created",
+        message=message,
+        from_email=settings.DEFAULT_FROM_EMAIL,
+        recipient_list=[email],
+        fail_silently=False,
+    )
+        except Exception as e:
+            print("Email Error:", e)
 
-Your teacher account has been created successfully.
+    messages.success(request, "Teacher created successfully!")
+    return redirect("admin_dashboard")
 
-Username: {username}
-Password: {password}
 
-Login here: {login_url}
 
-Please change your password after login.
-
-Regards,
-Admin
-""",
-    from_email=settings.DEFAULT_FROM_EMAIL,
-    recipient_list=[email],
-    fail_silently=False,
-)
 #         send_mail(
 #             subject="Your Teacher Account Created",
 #             message=f"""Hello {username},
@@ -161,10 +163,10 @@ Admin
 #             fail_silently=False,
 #         )
 
-        messages.success(request, "Teacher created and email sent successfully!")
-        return redirect('admin_dashboard')
+    #     messages.success(request, "Teacher created and email sent successfully!")
+    #     return redirect('admin_dashboard')
 
-    return render(request, "admin/create_teacher.html")
+    # return render(request, "admin/create_teacher.html")
 
 
 @login_required
