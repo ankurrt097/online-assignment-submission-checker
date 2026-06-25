@@ -106,7 +106,7 @@ def admin_dashboard(request):
     })
 
 
-@login_required
+
 from django.conf import settings
 from django.core.mail import send_mail
 
