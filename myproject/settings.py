@@ -12,7 +12,12 @@ SECRET_KEY = config('SECRET_KEY')
 # DEBUG = True
 DEBUG = False
 
-ALLOWED_HOSTS = ['.onrender.com']
+
+ALLOWED_HOSTS = [
+    '.onrender.com',
+    '127.0.0.1',
+    'localhost',
+]
 # CSRF & Session Security (Standard Defaults)
 CSRF_USE_SESSIONS = False
 CSRF_COOKIE_HTTPONLY = False
@@ -62,10 +67,8 @@ TEMPLATES = [
         },
     },
 ]
-
 CSRF_TRUSTED_ORIGINS = [
-    'http://127.0.0.1:8000',
-    'http://localhost:8000',
+    'https://online-assignment-submission-checker.onrender.com',
 ]
 
 WSGI_APPLICATION = 'myproject.wsgi.application'

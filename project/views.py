@@ -10,6 +10,8 @@ import random
 import string
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth import get_user_model
+
+from myproject import settings
 from .models import PasswordResetOTP
 from .models import CustomUser, TeacherProfile, StudentProfile, Course, Semester, Assignment, Submission, Subject
 from django.utils import timezone
@@ -100,8 +102,7 @@ def admin_dashboard(request):
 
 @login_required
 def create_teacher(request):
-    # if request.user.role != 'admin':
-    #     return redirect('admin_login')
+
 
     if request.method == "POST":
         username = request.POST.get("username")
@@ -121,8 +122,8 @@ def create_teacher(request):
 
         login_url = request.build_absolute_uri(reverse('login'))
         send_mail(
-            subject="Your Teacher Account Created",
-            message=f"""Hello {username},
+    subject="Your Teacher Account Created",
+    message=f"""Hello {username},
 
 Your teacher account has been created successfully.
 
@@ -134,11 +135,31 @@ Login here: {login_url}
 Please change your password after login.
 
 Regards,
-Admin""",
-            from_email=None,
-            recipient_list=[email],
-            fail_silently=False,
-        )
+Admin
+""",
+    from_email=settings.DEFAULT_FROM_EMAIL,
+    recipient_list=[email],
+    fail_silently=False,
+)
+#         send_mail(
+#             subject="Your Teacher Account Created",
+#             message=f"""Hello {username},
+
+# Your teacher account has been created successfully.
+
+# Username: {username}
+# Password: {password}
+
+# Login here: {login_url}
+
+# Please change your password after login.
+
+# Regards,
+# Admin""",
+#             from_email=None,
+#             recipient_list=[email],
+#             fail_silently=False,
+#         )
 
         messages.success(request, "Teacher created and email sent successfully!")
         return redirect('admin_dashboard')
