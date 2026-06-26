@@ -1,43 +1,46 @@
-import email
-
-from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib.auth import authenticate, login, logout
-from django.contrib import messages
-from django.contrib.auth.decorators import login_required
-from django.views.decorators.csrf import ensure_csrf_cookie
-from django.urls import reverse
-from django.core.mail import send_mail
-from django.db.models import Q
 import random
 import string
-from django.contrib.auth.hashers import make_password
-from django.contrib.auth import get_user_model
-
 import traceback
 
-
-from myproject import settings
-from .models import PasswordResetOTP
-from .models import CustomUser, TeacherProfile, StudentProfile, Course, Semester, Assignment, Submission, Subject
-from django.utils import timezone
 from datetime import timedelta
-from django.shortcuts import redirect
+
+from django.conf import settings
+from django.contrib import messages
+from django.contrib.auth import authenticate, get_user_model, login, logout
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.hashers import make_password
+from django.core.mail import send_mail
+
+from django.shortcuts import get_object_or_404, redirect, render
+from django.urls import reverse
+from django.utils import timezone
+from django.views.decorators.csrf import ensure_csrf_cookie
+
+from .models import (
+    Assignment,
+    Course,
+    CustomUser,
+    PasswordResetOTP,
+    Semester,
+    StudentProfile,
+    Subject,
+    Submission,
+    TeacherProfile,
+)
 
 
 def generate_password():
     characters = string.ascii_letters + string.digits
     return ''.join(random.choice(characters) for i in range(8))
-from django.shortcuts import render, redirect
-from django.contrib.auth import authenticate, login
-from django.contrib import messages
-from django.views.decorators.csrf import ensure_csrf_cookie
 
-from django.shortcuts import render, redirect
-from django.contrib.auth import authenticate, login
-from django.contrib import messages
 from django.conf import settings
 from django.core.mail import send_mail
 
+
+
+def generate_password():
+    characters = string.ascii_letters + string.digits
+    return ''.join(random.choice(characters) for i in range(8))
 
 @ensure_csrf_cookie
 def admin_login(request):
@@ -507,9 +510,9 @@ def class_list(request):
     # if request.user.role != 'admin':
     #     return redirect('login')
 
-    classes = ClassRoom.objects.all().order_by('semester', 'name')
+    semester_name = str(subject.semester)
 
-    return render(request, "admin/class_list.html", {"classes": classes})
+    return render(request, "admin/class_list.html", {"classes": semester_name})
 
 
 @login_required
@@ -863,10 +866,10 @@ def forgot_password(request):
         send_mail(
             "Password Reset OTP",
             f"Your OTP is {otp}",
-            "noreply@gmail.com",
+            settings.DEFAULT_FROM_EMAIL,
             [email],
-            fail_silently=False
-        )
+            fail_silently=False,
+)
 
         request.session["reset_user"] = user.id
 
