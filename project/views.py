@@ -1,6 +1,4 @@
 import email
-from urllib import request
-from urllib import request
 
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login, logout
@@ -14,9 +12,9 @@ import random
 import string
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth import get_user_model
-from dns import message
+
 import traceback
-from starlette.types import Send
+
 
 from myproject import settings
 from .models import PasswordResetOTP
