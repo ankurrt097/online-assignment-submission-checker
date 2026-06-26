@@ -15,6 +15,7 @@ import string
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth import get_user_model
 from dns import message
+from rich import traceback
 
 from myproject import settings
 from .models import PasswordResetOTP
@@ -139,8 +140,8 @@ Admin
 
             print("Email sent successfully")
 
-        except Exception as e:
-            print("Email Error:", e)
+        except Exception:
+            traceback.print_exc()
 
         messages.success(request, "Teacher created successfully!")
         return redirect("admin_dashboard")
