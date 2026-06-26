@@ -110,17 +110,16 @@ LOGIN_URL = '/login/'
 
 # Email configuration
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+EMAIL_HOST = "smtp-relay.brevo.com"
+EMAIL_PORT = 465
 
-EMAIL_HOST = config("EMAIL_HOST")
-EMAIL_PORT = int(config("EMAIL_PORT"))
-
-EMAIL_USE_TLS = True
-EMAIL_USE_SSL = False
+EMAIL_USE_TLS = False
+EMAIL_USE_SSL = True
 
 EMAIL_HOST_USER = config("EMAIL_HOST_USER")
 EMAIL_HOST_PASSWORD = config("EMAIL_HOST_PASSWORD")
 
-DEFAULT_FROM_EMAIL = "ankurrt097@gmail.com"
+DEFAULT_FROM_EMAIL = "b00e90001@smtp-brevo.com"
 EMAIL_TIMEOUT = 30
 
 # EMAIL_HOST_USER = 'your_email@gmail.com'
