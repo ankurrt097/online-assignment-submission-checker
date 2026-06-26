@@ -100,74 +100,85 @@ def admin_dashboard(request):
 def create_teacher(request):
 
     if request.method == "POST":
+
+        print("========== CREATE TEACHER START ==========")
+
         username = request.POST.get("username")
         email = request.POST.get("email")
         password = request.POST.get("password")
 
+        print(username)
+        print(email)
+
         if CustomUser.objects.filter(username=username).exists():
+            print("Username already exists")
             messages.error(request, "Username already exists!")
             return redirect("create_teacher")
 
-        CustomUser.objects.create_user(
+        user = CustomUser.objects.create_user(
             username=username,
             email=email,
             password=password,
             role="teacher",
         )
 
+        print("Teacher Created Successfully")
+
         login_url = request.build_absolute_uri(reverse("login"))
-        print("===== CREATE TEACHER START =====")
+
+        subject = "Teacher Account Created"
+
+        message = f"""
+Hello {username},
+
+Your teacher account has been created successfully.
+
+Username : {username}
+
+Password : {password}
+
+Login URL :
+{login_url}
+
+Please change your password after login.
+
+Regards
+Admin
+"""
 
         try:
-            print("Sending email...")
+
+            print("Sending Email...")
 
             result = send_mail(
-            subject="Your Teacher Account Created",
-            message=message,
-            from_email=settings.DEFAULT_FROM_EMAIL,
-            recipient_list=[email],
-            fail_silently=False,
-    )
+                subject=subject,
+                message=message,
+                from_email=settings.DEFAULT_FROM_EMAIL,
+                recipient_list=[email],
+                fail_silently=False,
+            )
 
-            print("send_mail returned:", result)
+            print("send_mail returned :", result)
+            print("EMAIL SENT SUCCESSFULLY")
+
+            messages.success(
+                request,
+                "Teacher created and Email sent successfully."
+            )
 
         except Exception as e:
-            print("EMAIL ERROR:", repr(e))
+
+            print("EMAIL ERROR")
+            print(repr(e))
             traceback.print_exc()
 
-        print("===== CREATE TEACHER END =====")
+            messages.warning(
+                request,
+                f"Teacher created but Email failed.\n{e}"
+            )
 
-#         try:
-#             send_mail(
-#                 subject="Your Teacher Account Created",
-#                 message=f"""Hello {username},
+        print("========== CREATE TEACHER END ==========")
 
-# Your teacher account has been created successfully.
-
-# Username: {username}
-# Password: {password}
-
-# Login here: {login_url}
-
-# Please change your password after login.
-
-# Regards,
-# Admin
-# """,
-#                 from_email=settings.DEFAULT_FROM_EMAIL,
-#                 recipient_list=[email],
-#                 fail_silently=False,
-#             )
-
-#             print("Email sent successfully")
-
-        
-#         except Exception as e:
-#                 print("EMAIL ERROR:", repr(e))
-#                 traceback.print_exc()
-            
-
-        messages.success(request, "Teacher created successfully!")
         return redirect("admin_dashboard")
 
     return render(request, "admin/create_teacher.html")
