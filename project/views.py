@@ -15,7 +15,7 @@ import string
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth import get_user_model
 from dns import message
-from rich import traceback
+import traceback
 from starlette.types import Send
 
 from myproject import settings
@@ -140,8 +140,11 @@ Admin
 
             print("Email sent successfully")
 
-        except Exception:
-            traceback.print_exc()
+        
+        except Exception as e:
+                print("EMAIL ERROR:", repr(e))
+                traceback.print_exc()
+            
 
         messages.success(request, "Teacher created successfully!")
         return redirect("admin_dashboard")
