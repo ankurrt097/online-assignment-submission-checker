@@ -116,35 +116,55 @@ def create_teacher(request):
         )
 
         login_url = request.build_absolute_uri(reverse("login"))
+        print("===== CREATE TEACHER START =====")
 
         try:
-            send_mail(
-                subject="Your Teacher Account Created",
-                message=f"""Hello {username},
+            print("Sending email...")
 
-Your teacher account has been created successfully.
+            result = send_mail(
+            subject="Your Teacher Account Created",
+            message=message,
+            from_email=settings.DEFAULT_FROM_EMAIL,
+            recipient_list=[email],
+            fail_silently=False,
+    )
 
-Username: {username}
-Password: {password}
+            print("send_mail returned:", result)
 
-Login here: {login_url}
+        except Exception as e:
+            print("EMAIL ERROR:", repr(e))
+            traceback.print_exc()
 
-Please change your password after login.
+        print("===== CREATE TEACHER END =====")
 
-Regards,
-Admin
-""",
-                from_email=settings.DEFAULT_FROM_EMAIL,
-                recipient_list=[email],
-                fail_silently=False,
-            )
+#         try:
+#             send_mail(
+#                 subject="Your Teacher Account Created",
+#                 message=f"""Hello {username},
 
-            print("Email sent successfully")
+# Your teacher account has been created successfully.
+
+# Username: {username}
+# Password: {password}
+
+# Login here: {login_url}
+
+# Please change your password after login.
+
+# Regards,
+# Admin
+# """,
+#                 from_email=settings.DEFAULT_FROM_EMAIL,
+#                 recipient_list=[email],
+#                 fail_silently=False,
+#             )
+
+#             print("Email sent successfully")
 
         
-        except Exception as e:
-                print("EMAIL ERROR:", repr(e))
-                traceback.print_exc()
+#         except Exception as e:
+#                 print("EMAIL ERROR:", repr(e))
+#                 traceback.print_exc()
             
 
         messages.success(request, "Teacher created successfully!")
