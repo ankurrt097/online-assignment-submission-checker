@@ -71,21 +71,6 @@ def admin_login(request):
     return render(request, "admin/admin_login.html")
 
 
-# @ensure_csrf_cookie
-# def admin_login(request):
-#     if request.method == "POST":
-#         username = request.POST.get("username")
-#         password = request.POST.get("password")
-#         user = authenticate(request, username=username, password=password)
-#         # if user  == 'admin':
-#         #     login(request, user)
-#         #     return redirect('admin_dashboard')
-#         if user is not None and user.role == "admin":
-#             login(request, user)
-#             return redirect('admin_dashboard')
-#         else:
-#             messages.error(request, "Invalid Admin Credentials")
-#     return render(request, "admin/admin_login.html")
 
 
 @login_required
@@ -106,9 +91,6 @@ def admin_dashboard(request):
     })
 
 
-
-from django.conf import settings
-from django.core.mail import send_mail
 
 @login_required
 def create_teacher(request):
@@ -146,52 +128,52 @@ Regards,
 Admin
 """
 
-        try:
-            send_mail(
-                subject="Your Teacher Account Created",
-                message=message,
-                from_email=settings.DEFAULT_FROM_EMAIL,
-                recipient_list=[email],
-                fail_silently=False,
-            )
-            messages.success(request, "Teacher created and email sent successfully!")
+    #     try:
+    #         send_mail(
+    #             subject="Your Teacher Account Created",
+    #             message=message,
+    #             from_email=settings.DEFAULT_FROM_EMAIL,
+    #             recipient_list=[email],
+    #             fail_silently=False,
+    #         )
+    #         messages.success(request, "Teacher created and email sent successfully!")
 
-        except Exception as e:
-            print("Email Error:", e)
-            messages.warning(
-                request,
-                f"Teacher created successfully but email could not be sent. Error: {e}"
-            )
+    #     except Exception as e:
+    #         print("Email Error:", e)
+    #         messages.warning(
+    #             request,
+    #             f"Teacher created successfully but email could not be sent. Error: {e}"
+    #         )
 
-        return redirect("admin_dashboard")
+    #     return redirect("admin_dashboard")
 
-    return render(request, "admin/create_teacher.html")
+    # return render(request, "admin/create_teacher.html")
 
 
-#         send_mail(
-#             subject="Your Teacher Account Created",
-#             message=f"""Hello {username},
+        send_mail(
+            subject="Your Teacher Account Created",
+            message=f"""Hello {username},
 
-# Your teacher account has been created successfully.
+Your teacher account has been created successfully.
 
-# Username: {username}
-# Password: {password}
+Username: {username}
+Password: {password}
 
-# Login here: {login_url}
+Login here: {login_url}
 
 # Please change your password after login.
 
 # Regards,
 # Admin""",
-#             from_email=None,
-#             recipient_list=[email],
-#             fail_silently=False,
-#         )
+            from_email=None,
+            recipient_list=[email],
+            fail_silently=False,
+        )
 
-    #     messages.success(request, "Teacher created and email sent successfully!")
-    #     return redirect('admin_dashboard')
+        messages.success(request, "Teacher created and email sent successfully!")
+        return redirect('admin_dashboard')
 
-    # return render(request, "admin/create_teacher.html")
+    return render(request, "admin/create_teacher.html")
 
 
 @login_required
