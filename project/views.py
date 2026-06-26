@@ -116,32 +116,32 @@ def create_teacher(request):
 
         login_url = request.build_absolute_uri(reverse("login"))
 
-        try:
-            send_mail(
-                subject="Your Teacher Account Created",
-                message=f"""Hello {username},
+#         try:
+#             send_mail(
+#                 subject="Your Teacher Account Created",
+#                 message=f"""Hello {username},
 
-Your teacher account has been created successfully.
+# Your teacher account has been created successfully.
 
-Username: {username}
-Password: {password}
+# Username: {username}
+# Password: {password}
 
-Login here: {login_url}
+# Login here: {login_url}
 
-Please change your password after login.
+# Please change your password after login.
 
-Regards,
-Admin
-""",
-                from_email=settings.DEFAULT_FROM_EMAIL,
-                recipient_list=[email],
-                fail_silently=False,
-            )
+# Regards,
+# Admin
+# """,
+#                 from_email=settings.DEFAULT_FROM_EMAIL,
+#                 recipient_list=[email],
+#                 fail_silently=False,
+#             )
 
-            print("Email sent successfully")
+#             print("Email sent successfully")
 
-        except Exception:
-            traceback.print_exc()
+#         except Exception:
+#             traceback.print_exc()
 
         messages.success(request, "Teacher created successfully!")
         return redirect("admin_dashboard")
