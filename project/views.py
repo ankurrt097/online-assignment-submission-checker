@@ -92,8 +92,7 @@ def admin_dashboard(request):
     })
 
 
-from django.conf import settings
-from django.core.mail import send_mail
+
 
 @login_required
 def create_teacher(request):
@@ -116,32 +115,32 @@ def create_teacher(request):
 
         login_url = request.build_absolute_uri(reverse("login"))
 
-#         try:
-#             send_mail(
-#                 subject="Your Teacher Account Created",
-#                 message=f"""Hello {username},
+        try:
+            send_mail(
+                subject="Your Teacher Account Created",
+                message=f"""Hello {username},
 
-# Your teacher account has been created successfully.
+Your teacher account has been created successfully.
 
-# Username: {username}
-# Password: {password}
+Username: {username}
+Password: {password}
 
-# Login here: {login_url}
+Login here: {login_url}
 
-# Please change your password after login.
+Please change your password after login.
 
-# Regards,
-# Admin
-# """,
-#                 from_email=settings.DEFAULT_FROM_EMAIL,
-#                 recipient_list=[email],
-#                 fail_silently=False,
-#             )
+Regards,
+Admin
+""",
+                from_email=settings.DEFAULT_FROM_EMAIL,
+                recipient_list=[email],
+                fail_silently=False,
+            )
 
-#             print("Email sent successfully")
+            print("Email sent successfully")
 
-#         except Exception:
-#             traceback.print_exc()
+        except Exception:
+            traceback.print_exc()
 
         messages.success(request, "Teacher created successfully!")
         return redirect("admin_dashboard")
@@ -791,19 +790,25 @@ def create_student(request):
         semester.students.add(user)
 
         # Send login credentials via email
-        if email:
-            try:
-                subject = 'Welcome to the College Portal - Your Login Credentials'
-                message = f'Hello {name},\n\nYour student account has been created successfully.\n\nLogin Credentials:\nUsername: {enrollment_id}\nPassword: {enrollment_id}\n\nPlease login and change your password for security.\n\nBest regards,\nCollege Administration'
-                send_mail(subject, message, None, [email])
-                email_status = "and credentials sent to email"
-            except Exception as e:
-                email_status = "but failed to send email"
-                print(f"Email error: {e}")
-        else:
-            email_status = ""
+        # if email:
+        #     try:
+        #         subject = 'Welcome to the College Portal - Your Login Credentials'
+        #         message = f'Hello {name},\n\nYour student account has been created successfully.\n\nLogin Credentials:\nUsername: {enrollment_id}\nPassword: {enrollment_id}\n\nPlease login and change your password for security.\n\nBest regards,\nCollege Administration'
+        #         send_mail(
+        #             subject,
+        #             message,
+        #             settings.DEFAULT_FROM_EMAIL,
+        #             [email],
+        #             fail_silently=False,
+        #                 )
+        #         email_status = "and credentials sent to email"
+        #     except Exception as e:
+        #         email_status = "but failed to send email"
+        #         print(f"Email error: {e}")
+        # else:
+        #     email_status = ""
 
-        messages.success(request, f"Student created {email_status} and assigned to {semester}")
+        # messages.success(request, f"Student created {email_status} and assigned to {semester}")
         return redirect("admin_dashboard")
         
     return render(request, "admin/create_student.html", {
