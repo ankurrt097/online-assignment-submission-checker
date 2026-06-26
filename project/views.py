@@ -16,6 +16,7 @@ from django.contrib.auth.hashers import make_password
 from django.contrib.auth import get_user_model
 from dns import message
 from rich import traceback
+from starlette.types import Send
 
 from myproject import settings
 from .models import PasswordResetOTP
@@ -790,25 +791,25 @@ def create_student(request):
         semester.students.add(user)
 
         # Send login credentials via email
-        # if email:
-        #     try:
-        #         subject = 'Welcome to the College Portal - Your Login Credentials'
-        #         message = f'Hello {name},\n\nYour student account has been created successfully.\n\nLogin Credentials:\nUsername: {enrollment_id}\nPassword: {enrollment_id}\n\nPlease login and change your password for security.\n\nBest regards,\nCollege Administration'
-        #         send_mail(
-        #             subject,
-        #             message,
-        #             settings.DEFAULT_FROM_EMAIL,
-        #             [email],
-        #             fail_silently=False,
-        #                 )
-        #         email_status = "and credentials sent to email"
-        #     except Exception as e:
-        #         email_status = "but failed to send email"
-        #         print(f"Email error: {e}")
-        # else:
-        #     email_status = ""
+        if email:
+            try:
+                subject = 'Welcome to the College Portal - Your Login Credentials'
+                message = f'Hello {name},\n\nYour student account has been created successfully.\n\nLogin Credentials:\nUsername: {enrollment_id}\nPassword: {enrollment_id}\n\nPlease login and change your password for security.\n\nBest regards,\nCollege Administration'
+                send_mail(
+                    subject,
+                    message,
+                    settings.DEFAULT_FROM_EMAIL,
+                    [email],
+                    fail_silently=False,
+                        )
+                email_status = "and credentials sent to email"
+            except Exception as e:
+                email_status = "but failed to send email"
+                print(f"Email error: {e}")
+        else:
+            email_status = ""
 
-        # messages.success(request, f"Student created {email_status} and assigned to {semester}")
+        messages.success(request, f"Student created {email_status} and assigned to {semester}")
         return redirect("admin_dashboard")
         
     return render(request, "admin/create_student.html", {
