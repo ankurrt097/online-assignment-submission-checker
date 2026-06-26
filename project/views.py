@@ -91,6 +91,8 @@ def admin_dashboard(request):
     })
 
 
+from django.conf import settings
+from django.core.mail import send_mail
 
 @login_required
 def create_teacher(request):
@@ -113,7 +115,10 @@ def create_teacher(request):
 
         login_url = request.build_absolute_uri(reverse("login"))
 
-        message = f"""Hello {username},
+        try:
+            send_mail(
+                subject="Your Teacher Account Created",
+                message=f"""Hello {username},
 
 Your teacher account has been created successfully.
 
@@ -126,55 +131,21 @@ Please change your password after login.
 
 Regards,
 Admin
-"""
+""",
+                from_email=settings.DEFAULT_FROM_EMAIL,
+                recipient_list=[email],
+                fail_silently=False,
+            )
 
-    #     try:
-    #         send_mail(
-    #             subject="Your Teacher Account Created",
-    #             message=message,
-    #             from_email=settings.DEFAULT_FROM_EMAIL,
-    #             recipient_list=[email],
-    #             fail_silently=False,
-    #         )
-    #         messages.success(request, "Teacher created and email sent successfully!")
+            print("Email sent successfully")
 
-    #     except Exception as e:
-    #         print("Email Error:", e)
-    #         messages.warning(
-    #             request,
-    #             f"Teacher created successfully but email could not be sent. Error: {e}"
-    #         )
+        except Exception as e:
+            print("Email Error:", e)
 
-    #     return redirect("admin_dashboard")
-
-    # return render(request, "admin/create_teacher.html")
-
-
-        send_mail(
-            subject="Your Teacher Account Created",
-            message=f"""Hello {username},
-
-Your teacher account has been created successfully.
-
-Username: {username}
-Password: {password}
-
-Login here: {login_url}
-
-# Please change your password after login.
-
-# Regards,
-# Admin""",
-            from_email=None,
-            recipient_list=[email],
-            fail_silently=False,
-        )
-
-        messages.success(request, "Teacher created and email sent successfully!")
-        return redirect('admin_dashboard')
+        messages.success(request, "Teacher created successfully!")
+        return redirect("admin_dashboard")
 
     return render(request, "admin/create_teacher.html")
-
 
 @login_required
 def teacher_list(request):
