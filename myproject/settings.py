@@ -1,7 +1,8 @@
 from pathlib import Path
 import os
 from decouple import config
-
+print("========== SETTINGS LOADED ==========")
+print("BUILD VERSION: 29-JUN-2026 SMTP TEST")
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
