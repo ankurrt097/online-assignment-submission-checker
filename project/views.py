@@ -117,8 +117,8 @@ def admin_login(request):
 
 @login_required
 def admin_dashboard(request):
-    # if request.user.role != 'admin':
-    #     return redirect('admin_login')
+    if request.user.role != 'admin':
+        return redirect('admin_login')
         
     teachers_count = CustomUser.objects.filter(role='teacher').count()
     students_count = CustomUser.objects.filter(role='student').count()
