@@ -42,6 +42,44 @@ def generate_password():
     characters = string.ascii_letters + string.digits
     return ''.join(random.choice(characters) for i in range(8))
 
+# @ensure_csrf_cookie
+# def admin_login(request):
+
+#     if request.method == "POST":
+
+#         username = request.POST.get("username")
+#         password = request.POST.get("password")
+
+#         print(username, password)
+
+#         user = authenticate(
+#             request,
+#             username=username,
+#             password=password
+#         )
+
+#         print("USER:", user)
+
+#         if user:
+
+#             print("ROLE:", user.role)
+
+#             login(request, user)
+
+#             return redirect("admin_dashboard")
+
+#         else:
+#             messages.error(request, "Invalid Username or Password")
+
+#     return render(request, "admin/admin_login.html")
+
+
+from django.contrib.auth import authenticate, login, get_user_model
+from django.contrib import messages
+from django.shortcuts import render, redirect
+from django.views.decorators.csrf import ensure_csrf_cookie
+
+User = get_user_model()
 @ensure_csrf_cookie
 def admin_login(request):
 
@@ -50,28 +88,29 @@ def admin_login(request):
         username = request.POST.get("username")
         password = request.POST.get("password")
 
-        print(username, password)
+        # Check if an admin with this username exists
+        admin = User.objects.filter(username=username, role="admin").first()
 
+        if not admin:
+            messages.error(request, "Admin account does not exist.")
+            return render(request, "admin/admin_login.html")
+
+        # Authenticate the admin
         user = authenticate(
             request,
             username=username,
             password=password
         )
 
-        print("USER:", user)
-
-        if user:
-
-            print("ROLE:", user.role)
-
+        if user and user.role == "admin":
             login(request, user)
-
             return redirect("admin_dashboard")
 
-        else:
-            messages.error(request, "Invalid Username or Password")
+        messages.error(request, "Invalid admin password.")
 
     return render(request, "admin/admin_login.html")
+
+
 
 
 
