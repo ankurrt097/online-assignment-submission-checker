@@ -12,12 +12,11 @@ SECRET_KEY = config('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 # DEBUG = True
 DEBUG = False
-
-
 ALLOWED_HOSTS = [
-    '.onrender.com',
-    '127.0.0.1',
-    'localhost',
+    "ankurrt097.pythonanywhere.com",
+    ".onrender.com",
+    "127.0.0.1",
+    "localhost",
 ]
 # CSRF & Session Security (Standard Defaults)
 CSRF_USE_SESSIONS = False
@@ -69,7 +68,8 @@ TEMPLATES = [
     },
 ]
 CSRF_TRUSTED_ORIGINS = [
-    'https://online-assignment-submission-checker.onrender.com',
+    "https://ankurrt097.pythonanywhere.com",
+    "https://online-assignment-submission-checker.onrender.com",
 ]
 
 WSGI_APPLICATION = 'myproject.wsgi.application'
